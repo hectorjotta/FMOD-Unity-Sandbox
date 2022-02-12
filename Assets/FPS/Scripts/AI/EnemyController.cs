@@ -60,9 +60,6 @@ namespace Unity.FPS.AI
         [Tooltip("The duration of the flash on hit")]
         public float FlashOnHitDuration = 0.5f;
 
-        [Header("Sounds")] [Tooltip("Sound played when recieving damages")]
-        public AudioClip DamageTick;
-
         [Header("VFX")] [Tooltip("The VFX prefab spawned when the enemy dies")]
         public GameObject DeathVfx;
 
@@ -111,7 +108,6 @@ namespace Unity.FPS.AI
         Actor m_Actor;
         Collider[] m_SelfColliders;
         GameFlowManager m_GameFlowManager;
-        bool m_WasDamagedThisFrame;
         float m_LastTimeWeaponSwapped = Mathf.NegativeInfinity;
         int m_CurrentWeaponIndex;
         WeaponController m_CurrentWeapon;
@@ -213,7 +209,6 @@ namespace Unity.FPS.AI
                 data.Renderer.SetPropertyBlock(m_BodyFlashMaterialPropertyBlock, data.MaterialIndex);
             }
 
-            m_WasDamagedThisFrame = false;
         }
 
         void EnsureIsWithinLevelBounds()
@@ -348,12 +343,7 @@ namespace Unity.FPS.AI
                 
                 onDamaged?.Invoke();
                 m_LastTimeDamaged = Time.time;
-            
-                // play the damage tick sound
-                if (DamageTick && !m_WasDamagedThisFrame)
-                    AudioUtility.CreateSFX(DamageTick, transform.position, AudioUtility.AudioGroups.DamageTick, 0f);
-            
-                m_WasDamagedThisFrame = true;
+
             }
         }
 

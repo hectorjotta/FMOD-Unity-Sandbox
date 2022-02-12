@@ -4,11 +4,9 @@ using UnityEngine.Events;
 
 namespace Unity.FPS.Gameplay
 {
-    [RequireComponent(typeof(AudioSource))]
     public class Jetpack : MonoBehaviour
     {
-        [Header("References")] [Tooltip("Audio source for jetpack sfx")]
-        public AudioSource AudioSource;
+        [Header("References")] 
 
         [Tooltip("Particles for jetpack vfx")] public ParticleSystem[] JetpackVfx;
 
@@ -34,9 +32,6 @@ namespace Unity.FPS.Gameplay
 
         [Tooltip("Delay after last use before starting to refill")]
         public float RefillDelay = 1f;
-
-        [Header("Audio")] [Tooltip("Sound played when using the jetpack")]
-        public AudioClip JetpackSfx;
 
         bool m_CanUseJetpack;
         PlayerCharacterController m_PlayerCharacterController;
@@ -64,8 +59,6 @@ namespace Unity.FPS.Gameplay
 
             CurrentFillRatio = 1f;
 
-            AudioSource.clip = JetpackSfx;
-            AudioSource.loop = true;
         }
 
         void Update()
@@ -112,8 +105,6 @@ namespace Unity.FPS.Gameplay
                     emissionModulesVfx.enabled = true;
                 }
 
-                if (!AudioSource.isPlaying)
-                    AudioSource.Play();
             }
             else
             {
@@ -135,8 +126,7 @@ namespace Unity.FPS.Gameplay
                 // keeps the ratio between 0 and 1
                 CurrentFillRatio = Mathf.Clamp01(CurrentFillRatio);
 
-                if (AudioSource.isPlaying)
-                    AudioSource.Stop();
+
             }
         }
 

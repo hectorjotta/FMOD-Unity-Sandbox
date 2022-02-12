@@ -23,14 +23,9 @@ namespace Unity.FPS.AI
         public ParticleSystem[] RandomHitSparks;
 
         public ParticleSystem[] OnDetectVfx;
-        public AudioClip OnDetectSfx;
-
-        [Header("Sound")] public AudioClip MovementSound;
-        public MinMaxFloat PitchDistortionMovementSpeed;
 
         public AIState AiState { get; private set; }
         EnemyController m_EnemyController;
-        AudioSource m_AudioSource;
 
         const string k_AnimMoveSpeedParameter = "MoveSpeed";
         const string k_AnimAttackParameter = "Attack";
@@ -52,11 +47,6 @@ namespace Unity.FPS.AI
             // Start patrolling
             AiState = AIState.Patrol;
 
-            // adding a audio source to play the movement sound on it
-            m_AudioSource = GetComponent<AudioSource>();
-            DebugUtility.HandleErrorIfNullGetComponent<AudioSource, EnemyMobile>(m_AudioSource, this, gameObject);
-            m_AudioSource.clip = MovementSound;
-            m_AudioSource.Play();
         }
 
         void Update()
@@ -69,9 +59,6 @@ namespace Unity.FPS.AI
             // Update animator speed parameter
             Animator.SetFloat(k_AnimMoveSpeedParameter, moveSpeed);
 
-            // changing the pitch of the movement sound depending on the movement speed
-            m_AudioSource.pitch = Mathf.Lerp(PitchDistortionMovementSpeed.Min, PitchDistortionMovementSpeed.Max,
-                moveSpeed / m_EnemyController.NavMeshAgent.speed);
         }
 
         void UpdateAiStateTransitions()
@@ -148,10 +135,6 @@ namespace Unity.FPS.AI
                 OnDetectVfx[i].Play();
             }
 
-            if (OnDetectSfx)
-            {
-                AudioUtility.CreateSFX(OnDetectSfx, transform.position, AudioUtility.AudioGroups.EnemyDetection, 1f);
-            }
 
             Animator.SetBool(k_AnimAlertedParameter, true);
         }
